@@ -1,0 +1,11 @@
+A* - Exemple Ex1-3 - Exécution 10
+H1 : nombre de cases mal placées, case vide exclue.
+H2 : somme des distances de Manhattan, case vide exclue.
+Heuristique utilisée : H3 = max(H1, H2). Pour ce puzzle, H3 = H2.
+Priorité de recherche : f(n) = g(n) + H3(n), coût de chaque mouvement = 1.
+Nombre d'itérations : 181440
+Nombre d'états distincts explorés : 181440
+Temps de recherche : 16.132663500 secondes
+Colonnes du fichier stats : itération TAB taille de l'ensemble des états explorés.
+
+Aucune solution : la frontière a été épuisée.

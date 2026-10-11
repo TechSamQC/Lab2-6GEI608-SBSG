@@ -1,0 +1,159 @@
+A* - Exemple Ex1-4 - Exécution 3
+H1 : nombre de cases mal placées, case vide exclue.
+H2 : somme des distances de Manhattan, case vide exclue.
+Heuristique utilisée : H3 = max(H1, H2). Pour ce puzzle, H3 = H2.
+Priorité de recherche : f(n) = g(n) + H3(n), coût de chaque mouvement = 1.
+Nombre d'itérations : 727
+Nombre d'états distincts explorés : 727
+Temps de recherche : 0.076680200 secondes
+Colonnes du fichier stats : itération TAB taille de l'ensemble des états explorés.
+
+Nombre de déplacements : 28
+Nombre d'états dans le chemin : 29
+Chemin du vide : droite -> droite -> bas -> bas -> gauche -> gauche -> haut -> haut -> droite -> droite -> bas -> bas -> gauche -> gauche -> haut -> haut -> droite -> droite -> bas -> bas -> gauche -> gauche -> haut -> haut -> droite -> droite -> bas -> bas
+
+Étape 0
+*	8	7
+6	5	4
+3	2	1
+
+Étape 1
+8	*	7
+6	5	4
+3	2	1
+
+Étape 2
+8	7	*
+6	5	4
+3	2	1
+
+Étape 3
+8	7	4
+6	5	*
+3	2	1
+
+Étape 4
+8	7	4
+6	5	1
+3	2	*
+
+Étape 5
+8	7	4
+6	5	1
+3	*	2
+
+Étape 6
+8	7	4
+6	5	1
+*	3	2
+
+Étape 7
+8	7	4
+*	5	1
+6	3	2
+
+Étape 8
+*	7	4
+8	5	1
+6	3	2
+
+Étape 9
+7	*	4
+8	5	1
+6	3	2
+
+Étape 10
+7	4	*
+8	5	1
+6	3	2
+
+Étape 11
+7	4	1
+8	5	*
+6	3	2
+
+Étape 12
+7	4	1
+8	5	2
+6	3	*
+
+Étape 13
+7	4	1
+8	5	2
+6	*	3
+
+Étape 14
+7	4	1
+8	5	2
+*	6	3
+
+Étape 15
+7	4	1
+*	5	2
+8	6	3
+
+Étape 16
+*	4	1
+7	5	2
+8	6	3
+
+Étape 17
+4	*	1
+7	5	2
+8	6	3
+
+Étape 18
+4	1	*
+7	5	2
+8	6	3
+
+Étape 19
+4	1	2
+7	5	*
+8	6	3
+
+Étape 20
+4	1	2
+7	5	3
+8	6	*
+
+Étape 21
+4	1	2
+7	5	3
+8	*	6
+
+Étape 22
+4	1	2
+7	5	3
+*	8	6
+
+Étape 23
+4	1	2
+*	5	3
+7	8	6
+
+Étape 24
+*	1	2
+4	5	3
+7	8	6
+
+Étape 25
+1	*	2
+4	5	3
+7	8	6
+
+Étape 26
+1	2	*
+4	5	3
+7	8	6
+
+Étape 27
+1	2	3
+4	5	*
+7	8	6
+
+Étape 28
+1	2	3
+4	5	6
+7	8	*
+
