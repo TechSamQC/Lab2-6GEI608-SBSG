@@ -1,22 +1,22 @@
- . . . | . . 1 | . 4 .
- . . . | . 5 . | . . .
- 2 . . | 6 . 9 | 7 . 5
+ . 6 . | . 3 4 | . . 9
+ . . 2 | . 1 . | . . 8
+ 1 . . | 8 . . | 6 4 .
 -------|-------|-------
- . . . | . . . | . 2 9
- . . . | . 7 . | . . 1
- . . 1 | 9 . . | 6 5 .
+ . . . | . . . | 3 9 .
+ . . . | . . . | 4 8 7
+ . . . | . . . | . . .
 -------|-------|-------
- . . . | 5 . 3 | . . .
- . 7 . | . 4 6 | 5 . .
- . . . | 7 1 . | . . 2
+ . 8 . | 7 . . | . 6 3
+ 7 1 . | 3 9 . | . . .
+ 9 . 4 | . 2 . | . 1 .
 
-Number of Givens: 25
-Number of Singles: 49
-Number of Hidden Singles: 20
-Number of Naked Pairs: 2
+Number of Givens: 28
+Number of Singles: 53
+Number of Hidden Singles: 0
+Number of Naked Pairs: 0
 Number of Hidden Pairs: 0
-Number of Pointing Pairs/Triples: 1
+Number of Pointing Pairs/Triples: 0
 Number of Box/Line Intersections: 0
-Number of Guesses: 5
-Number of Backtracks: 6
-Difficulty: Expert
+Number of Guesses: 0
+Number of Backtracks: 0
+Difficulty: Simple
