@@ -1,18 +1,20 @@
 import sys
+import random
 import numpy as np
 
-#from HillClimbing import HillClimbing
-#from Algo_Genetic import AlgoGenetic
+from HillClimbing import HillClimbing
+from Algo_Genetic import AlgoGenetic
 
 count = 1 # Variable globale pour compter les occurrences
 Ex = 3 # Variable globale pour le numéro d'exemple
 matriceinitiale = np.array([]) # matrice "initiale" du jeu
+lockedindices = [] # Liste des indices verrouillés dans la matrice initiale (les cases déjà remplies dans l'exemple) 
 
 def initialiser_application():
     """Préparation des ressources ou de la configuration."""
     print("Initialisation des composants...")
 
-    # Lire le fichier .txt de l'exemple pour initialiser la matrice "initiale" du jeu de Sudoku
+    # 1. Lire le fichier .txt de l'exemple pour initialiser la matrice "initiale" du jeu de Sudoku
     # Mode "r" (read) : lit le contenu
     with open("input-partie2/Input_" + str(Ex) + ".txt", "r", encoding="utf-8") as f:
         # Tout lire dans une seule chaîne
@@ -20,7 +22,7 @@ def initialiser_application():
     print ("Contenu du fichier exemple du jeu :")
     print(JeuInitiale)
 
-    # Initialisation de la matrice "initiale"
+    # 2. Initialisation de la matrice "initiale"
     global matriceinitiale
     matriceinitiale = np.array([[JeuInitiale[1], JeuInitiale[3], JeuInitiale[5], JeuInitiale[9], JeuInitiale[11], JeuInitiale[13],
                                  JeuInitiale[17], JeuInitiale[19], JeuInitiale[21]], 
@@ -40,7 +42,22 @@ def initialiser_application():
                                  JeuInitiale[226], JeuInitiale[228], JeuInitiale[230]],
                                 [JeuInitiale[233], JeuInitiale[235], JeuInitiale[237], JeuInitiale[241], JeuInitiale[243], JeuInitiale[245],
                                  JeuInitiale[249], JeuInitiale[251], JeuInitiale[253]]])
-    print("Matrice initiale :")
+
+    # 3. Initialisation de la liste des indices verrouillés
+    global lockedindices
+    for i in range(9): # Parcours des lignes
+        for j in range(9): # Parcours des colonnes
+            if matriceinitiale[i, j] != '.': # Vérifie si la case est remplie
+                lockedindices.append((i, j)) # Ajoute l'indice à la liste des indices verrouillés
+    print("Indices verrouillés :") # Affiche la liste des indices des cases verrouillées
+    print(lockedindices)
+
+    # 4. Remplissage des cases vides de la matrice initiale avec des chiffres par défaut (1 à 9)
+    for i in range(9): # Parcours des lignes
+        for j in range(9): # Parcours des colonnes
+            if matriceinitiale[i, j] == '.': # Vérifie si la case est vide
+                matriceinitiale[i, j] = str(random.randint(1, 9)) # Remplit la case vide avec un chiffre aléatoire entre 1 et 9
+    print("Matrice initiale :") # Affiche la matrice initiale après remplissage des cases vides
     print(matriceinitiale)
 
 def main():
@@ -54,15 +71,14 @@ def main():
     global count
     while (count <= 10):
         print ("Execution Hill Climbing #", count)
-        # TODO: Appel de l'algorithme Hill Climbing
-        
+        HillClimbing(matriceinitiale, lockedindices, count, Ex)
         count += 1
 
     # Boucle d'application de l'algorithme génétique pour résoudre le Sudoku
+    count = 1 # Réinitialisation du compteur pour l'algorithme génétique
     while (count <= 10):
         print ("Execution Algo Genetique #", count)
-        # TODO: Appel de l'algorithme Algo Genetique
-        
+        AlgoGenetic(matriceinitiale, lockedindices, count, Ex)
         count += 1
 
     # Retour d'un code de sortie (0 = succès)
