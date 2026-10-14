@@ -1,5 +1,3 @@
-from ast import Index
-
 import numpy as np
 import time
 
