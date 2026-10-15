@@ -2,11 +2,12 @@ import sys
 import random
 import numpy as np
 
+from SudokuFilling import fill
 from HillClimbing import HillClimbing
 from Algo_Genetic import AlgoGenetic
 
 count = 1 # Variable globale pour compter les occurrences
-Ex = 3 # Variable globale pour le numéro d'exemple
+Ex = 9 # Variable globale pour le numéro d'exemple
 matriceinitiale = np.array([]) # matrice "initiale" du jeu
 lockedindices = [] # Liste des indices verrouillés dans la matrice initiale (les cases déjà remplies dans l'exemple) 
 
@@ -53,11 +54,8 @@ def initialiser_application():
     print(lockedindices)
 
     # 4. Remplissage des cases vides de la matrice initiale avec des chiffres par défaut (1 à 9)
-    for i in range(9): # Parcours des lignes
-        for j in range(9): # Parcours des colonnes
-            if matriceinitiale[i, j] == '.': # Vérifie si la case est vide
-                matriceinitiale[i, j] = str(random.randint(1, 9)) # Remplit la case vide avec un chiffre aléatoire entre 1 et 9
-    print("Matrice initiale :") # Affiche la matrice initiale après remplissage des cases vides
+    fill(matriceinitiale, lockedindices, 9) # Initialise la matrice initiale en remplissant les cases vides avec des chiffres aléatoires (1 à 9 dans chaque bloc)
+    print("Matrice initialisée :") # Affiche la matrice initiale après remplissage des cases vides
     print(matriceinitiale)
 
 def main():
@@ -78,7 +76,7 @@ def main():
     count = 1 # Réinitialisation du compteur pour l'algorithme génétique
     while (count <= 10):
         print ("Execution Algo Genetique #", count)
-        AlgoGenetic(matriceinitiale, lockedindices, count, Ex)
+        #AlgoGenetic(matriceinitiale, lockedindices, count, Ex)
         count += 1
 
     # Retour d'un code de sortie (0 = succès)
