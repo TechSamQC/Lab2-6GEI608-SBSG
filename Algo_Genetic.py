@@ -70,7 +70,7 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
             population = [individu for _, individu in sorted(zip(fitness_scores, population), key=lambda x: x[0])] # Tri des individus par fitness (du meilleur au pire)
 
             # 3. Application du crossover
-            for i in range(0, len(population), 2): # Parcours des individus par paires
+            for i in range(4, len(population), 2): # Parcours des individus par paires en commençant à l'indice 4 pour préserver les 4 meilleurs individus (élitisme)
                 if i + 1 < len(population): # S'assurer qu'il y a bien une paire d'individus pour le crossover
                     parent1 = population[i] # Sélection du premier parent pour le crossover
                     parent2 = population[i + 1] # Sélection du second parent pour le crossover
@@ -79,7 +79,7 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
                     population[i + 1] = enfant2 # Remplacer le second parent par le second enfant
 
             # 4. Application de la mutation
-            for i in range(len(population)): # Parcours de chaque individu de la population
+            for i in range(4, len(population)): # Parcours de chaque individu de la population en commençant à l'indice 4 pour préserver les 4 meilleurs individus (élitisme)
                 population[i] = mutation(population[i], paires_echangeables) # Appliquer la mutation à chaque individu
 
             ###########TESTS###########
@@ -90,7 +90,6 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
 
             # 5. Prochaine itération
             it += 1
-
 
 def fonction_fitness(matrice):
     """
