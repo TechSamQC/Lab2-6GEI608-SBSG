@@ -282,4 +282,4 @@ Itération 280. 	 Taille de la frontière : 447.
 Itération 281. 	 Taille de la frontière : 450.
 Execution 10. 	 Taille de la frontière finale : 452.
 Nombre d'états explorés : 282.
-Temps d'exécution : 1.8362 secondes.
+Temps d'exécution : 1.3667 secondes.
