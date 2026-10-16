@@ -1,0 +1,2 @@
+Nombre maximum d'itérations atteint, solution non trouvée.
+Score final : 28
