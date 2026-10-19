@@ -28,8 +28,31 @@ L'algorithme fait les opérations suivantes :
 + La vérification d'états vue/exploré se fait à l'aide d'un "set". Le "set" permet d'avoir une liste de suite d'octets, plutôt que de matrice. Lors de la comparaison et vérification si un état a déjà été vu, c'est beaucoup plus rapide de comparer des suites d'octets que des matrices complètes\.
 + Une liste de parents est maintenue pour chaque état afin de pouvoir reconstruire le chemin de la solution. Cette liste contient le numéro de l'index de l'état parent de l'état à l'index courant, ce qui permet de retrouver le parent dans la liste frontière.
 
+### Statistiques
+#### Ex1-1 :
++ Frontière : 452
++ Nb états explorés : 282
++ Taille du chemin : 21
++ Moyenne du temps d'exécution : 0,96088 secondes
+#### Ex1-2 :
++ Frontière : 363
++ Nb états explorés : 232
++ Taille du chemin : 18
++ Moyenne du temps d'exécution : 0,65436 secondes
+#### Ex1-3 : NON EXÉCUTÉ (Aucune solution) !
+#### Ex1-4 : 
++ Frontière : 1085
++ Nb états explorés : 726
++ Taille du chemin : 29
++ Moyenne du temps d'exécution : 5,31069 secondes
+#### GLOBAL :
++ Moy. Frontière : 633,33
++ Moy. Nb états explorés : 413,33
++ Moy. Taille du chemin : 22,67
++ Moy. du temps d'exécution : 2,3086 secondes
+
 ### Conclusion de la partie 1
-On observe qu'avec cet algorithme, on n’obtient pas les meilleurs temps d'exécution de tous les algorithmes à cause évidemment de l'augmentation des opérations de comparaison à réaliser dans celui-ci. Cependant, on remarque qu'il permet d'avoir le chemin de plus petite taille, égale à celui de l'algorithme de recherche en largeur, tout en explorant beaucoup moins d'états. En effet, si on prend l'exemple 4 et que l’on compare les deux algorithmes, on voit que la recherche en largeur nécessitait 178 223 états explorés avant de trouver un chemin de taille 29, alors que l'algorithme A* a nécessité uniquement 726 états explorés pour retrouver ce chemin. De plus, la taille de la frontière fut nettement plus petite, 1085 contre 180 899. On peut donc déduire que l'algorithme A* est beaucoup moins gourmand en termes de mémoire.
+On observe qu'avec cet algorithme, on obtient des temps d'exécution très semblables aux meilleurs temps d'exécution obtenus avec les autres algorithmes pour ce même puzzle. De plus, on constate qu'il permet d'avoir le chemin de plus petite taille, égale à celui de l'algorithme de recherche en largeur, tout en explorant beaucoup moins d'états. En effet, si on prend l'exemple 4 et que l’on compare les deux algorithmes, on voit que la recherche en largeur nécessitait 178 223 états explorés avant de trouver un chemin de taille 29, alors que l'algorithme A* a nécessité uniquement 726 états explorés pour retrouver ce chemin. De plus, la taille de la frontière fut nettement plus petite, 1085 contre 180 899. On peut donc déduire que l'algorithme A* est beaucoup moins gourmand en termes de mémoire, tout en retrouvant le chemin le plus court et en un temps similaire au meilleur des algorithmes précédemment testés. Il nous semble ainsi le meilleur choix pour résoudre ce puzzle.
 
 ## Partie 2 - Problème d’optimisation - Sudoku
 ### Implémentation de la recherche locale (Hill climbing)
