@@ -15,9 +15,10 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
         Ex (int): Le numéro de l'exemple pour créer le dossier de sortie.
     """
     it = 0 # Compteur pour suivre le nombre d'itérations
+    it_restart = 1 # Compteur pour suivre le nombre de tentatives de recommencement
     starttime = time.time() # Variable pour suivre le temps d'exécution
     matriceetat = np.copy(matriceinitiale)  # Copie de la matrice initiale pour manipulation
-    max_it = 300_000 # Nombre maximum d'itérations pour l'algorithme Hill Climbing
+    max_it_restart = 200_000 # Nombre maximum d'itérations pour recommencer avec la matrice initiale
 
     # Génération de toutes les paires de cases échangeables dans chaque bloc 3x3
     paires_echangeables = [] # Liste pour stocker toutes les paires de cases échangeables
@@ -52,7 +53,13 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
                 # Écrire la grille résolue dans le fichier de sortie
                 output.write("Grille résolue :\n")
                 for i in range(9):
-                    output.write(" ".join(str(matriceetat[i, j]) for j in range(9)) + "\n")
+                    # Formate chaque bloc de 3 colonnes séparé par " | "
+                    ligne = " | ".join(" ".join(str(matriceetat[i, j]) for j in range(b * 3, (b + 1) * 3)) for b in range(3))
+                    output.write(ligne + "\n")
+                    # Ajoute les lignes de séparation horizontales après les lignes 2 et 5
+                    if i == 2 or i == 5:
+                        output.write("------|-------|-------\n")
+
                 # Écrire le temps d'exécution dans le fichier de sortie
                 output.write("Temps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
                 # Écrire le nombre d'itérations dans le fichier de sortie
@@ -60,12 +67,10 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
                 print("Execution ", compteur, ": Solution trouvée !") # Message de confirmation dans la console
                 break # Sortir de la boucle
 
-            # Vérifier si le nombre maximum d'itérations a été atteint
-            if it >= max_it:
-                output.write("Nombre maximum d'itérations atteint, solution non trouvée.\n")
-                output.write("Score final : " + str(Valeur) + "\n")
-                print("Execution ", compteur, ": Nombre maximum d'itérations atteint, solution non trouvée.") # Message de confirmation dans la console
-                break # Sortir de la boucle si le nombre maximum d'itérations est atteint
+            # Vérifier si le nombre maximum d'itérations de recommencement a été atteint. Autre mesure permettant d'assurer l'échappement de minima locaux/plateau
+            if it_restart >= max_it_restart:
+                matriceetat = matriceinitiale.copy() # Recommencer avec une copie de la matrice initiale
+                it_restart = 1 # Réinitialiser le compteur de tentatives de recommencement
 
             # 2. Parcourir chaque carré de 3x3 PERMUTABLES et trouver le meilleur voisin : Trouver le meilleur voisin dans la grille et permutter les valeurs
             # 2.1 Initialiser les structures de données pour le parcours des voisins
@@ -112,6 +117,7 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
 
             # 4. Prochaine itération
             it += 1 # Incrémenter le compteur d'itérations
+            it_restart += 1 # Incrémenter le compteur de tentatives de recommencement
 
 def evaluation(matrice):
     """
@@ -158,3 +164,62 @@ def evaluation_delta(counts, old_value, new_value):
     added_duplicate = int(counts[new_value] > 0) # Vérifie si l'ajout de la nouvelle valeur crée un doublon
     removed_duplicate = int(counts[old_value] > 1) # Vérifie si la suppression de l'ancienne valeur réduit un doublon
     return added_duplicate - removed_duplicate # Retourne la différence de score d'évaluation résultant du remplacement
+
+def bare_HillClimbing(matriceinitiale, paires_echangeables):
+    """
+        Algorithme de Hill Climbing "Bare" (sans code additionnel, tel que le redémarrage aléatoire, l'écriture de fichiers de sortie, etc.) pour résoudre le problème du jeu "Sudoku". 
+        Arguments:
+            matriceinitiale (np.ndarray): La matrice représentant l'état initial du jeu Sudoku.
+            paires_echangeables (list): La liste des paires de cases échangeables dans la matrice initiale (les cases qui peuvent être permutées).
+    """
+    matriceetat = np.copy(matriceinitiale)  # Copie de la matrice initiale pour manipulation
+
+    # Implémentation de l'algorithme Hill Climbing
+    while True:
+        # 1. Évaluer l'état actuel
+        Valeur = evaluation(matriceetat) # Évaluer l'état actuel
+
+        # Si la valeur d'évaluation est 0, cela signifie que l'état est parfait et l'algorithme peut s'arrêter
+        if Valeur == 0:
+            return matriceetat # Retourne la matrice résolue si l'état est parfait
+
+        # 2. Parcourir chaque carré de 3x3 PERMUTABLES et trouver le meilleur voisin : Trouver le meilleur voisin dans la grille et permutter les valeurs
+        # 2.1 Initialiser les structures de données pour le parcours des voisins
+        meilleurs_echanges = [] # Liste pour stocker les meilleurs échanges trouvés
+        meilleur_voisin_val = Valeur # Initialiser la valeur du meilleur voisin vers la valeur actuelle
+        compteurs_lignes = [Counter(matriceetat[i, :]) for i in range(9)] # Compteurs pour chaque ligne
+        compteurs_colonnes = [Counter(matriceetat[:, j]) for j in range(9)] # Compteurs pour chaque colonne
+
+        # 2.2 Parcourir toutes les paires échangeables et évaluer le delta pour chaque échange
+        for case1, case2 in paires_echangeables: # Boucle pour parcourir toutes les paires échangeables
+            i, j = case1 # Coordonnées de la première case de l'échange
+            y, z = case2 # Coordonnées de la seconde case de l'échange
+            valeur1 = matriceetat[i, j] # Valeur de la première case de l'échange
+            valeur2 = matriceetat[y, z] # Valeur de la seconde case de l'échange
+            delta = 0 # Initialiser le delta pour cet échange
+            # Évaluer l'impact de l'échange sur les lignes et les colonnes
+            if i != y: # SI les lignes des deux cases sont différentes, évaluer l'impact sur les lignes
+                delta += evaluation_delta(compteurs_lignes[i], valeur1, valeur2) # Évaluer l'impact sur la ligne i
+                delta += evaluation_delta(compteurs_lignes[y], valeur2, valeur1) # Évaluer l'impact sur la ligne y
+            if j != z: # SI les colonnes des deux cases sont différentes, évaluer l'impact sur les colonnes
+                delta += evaluation_delta(compteurs_colonnes[j], valeur1, valeur2) # Évaluer l'impact sur la colonne j
+                delta += evaluation_delta(compteurs_colonnes[z], valeur2, valeur1) # Évaluer l'impact sur la colonne z
+            valeurvoisin = Valeur + delta # Calculer la valeur du voisin en ajoutant le delta à la valeur actuelle
+            if valeurvoisin < meilleur_voisin_val: # Si le voisin est meilleur que le meilleur voisin trouvé jusqu'à présent
+                meilleur_voisin_val = valeurvoisin # Mettre à jour la valeur du meilleur voisin trouvé jusqu'à présent
+                meilleurs_echanges = [(case1, case2)] # Réinitialiser la liste des meilleurs échanges avec le nouvel échange trouvé
+            elif valeurvoisin == meilleur_voisin_val and valeurvoisin < Valeur: # Si le voisin a la même valeur que le meilleur voisin trouvé jusqu'à présent et qu'il est meilleur que l'état actuel
+                meilleurs_echanges.append((case1, case2)) # Ajouter l'échange à la liste des meilleurs échanges
+
+        # 2.3 On met à jour l'état actuel avec le meilleur voisin trouvé (meilleure permutation)
+        if meilleurs_echanges: # SI un meilleur voisin a été trouvé
+            premiere_case, seconde_case = random.choice(meilleurs_echanges) # Choisir un échange aléatoire parmi les meilleurs échanges trouvés
+            i, j = premiere_case # Coordonnées de la première case de l'échange choisie aléatoirement
+            y, z = seconde_case # Coordonnées de la seconde case de l'échange choisie aléatoirement
+            matriceetat[i, j], matriceetat[y, z] = matriceetat[y, z], matriceetat[i, j] # Mettre à jour la matrice d'état avec le meilleur échange trouvé
+
+        # 3. SINON, aucun changement n'a été effectué. Lancer l'échappement d'un plateau local
+        else: # Si aucun changement n'a été effectué lors de cette itération, on tente des swaps aléatoires, cela permet d'échapper à un plateau local
+            return matriceetat # Retourne la matrice actuelle si aucun meilleur voisin n'a été trouvé (plateau local)
+
+        # 4. Prochaine itération

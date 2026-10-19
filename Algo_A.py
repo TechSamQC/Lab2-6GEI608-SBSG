@@ -66,7 +66,7 @@ def AlgoAstar(matriceinitiale, matricevoulue, compteur, Ex):
                 output.write("Temps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
 
                 # Code pour enregistrer la solution dans le fichier de sortie
-                with open("output_Ex1-" + str(Ex) + "/Algo_Largeur_" + str(compteur) + "_chemin_solution.txt", "w", encoding="utf-8") as solution:
+                with open("output_Ex1-" + str(Ex) + "/Algo_A_" + str(compteur) + "_chemin_solution.txt", "w", encoding="utf-8") as solution:
                     # Parcourir les parents pour reconstruire le chemin
                     chemin = [] # Liste pour stocker le chemin de la solution
                     index_courant = Current # Index de l'état courant (solution) dans ListeFrontiere

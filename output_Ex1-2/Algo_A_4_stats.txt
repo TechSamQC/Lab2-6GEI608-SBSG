@@ -232,4 +232,4 @@ Itération 230. 	 Taille de la frontière : 372.
 Itération 231. 	 Taille de la frontière : 373.
 Execution 4. 	 Taille de la frontière finale : 373.
 Nombre d'états explorés : 232.
-Temps d'exécution : 1.2577 secondes.
+Temps d'exécution : 0.6239 secondes.
