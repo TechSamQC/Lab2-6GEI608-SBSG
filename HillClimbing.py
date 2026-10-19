@@ -52,7 +52,13 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
                 # Écrire la grille résolue dans le fichier de sortie
                 output.write("Grille résolue :\n")
                 for i in range(9):
-                    output.write(" ".join(str(matriceetat[i, j]) for j in range(9)) + "\n")
+                    # Formate chaque bloc de 3 colonnes séparé par " | "
+                    ligne = " | ".join(" ".join(str(matriceetat[i, j]) for j in range(b * 3, (b + 1) * 3)) for b in range(3))
+                    output.write(ligne + "\n")
+                    # Ajoute les lignes de séparation horizontales après les lignes 2 et 5
+                    if i == 2 or i == 5:
+                        output.write("------|-------|-------\n")
+
                 # Écrire le temps d'exécution dans le fichier de sortie
                 output.write("Temps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
                 # Écrire le nombre d'itérations dans le fichier de sortie
