@@ -726,4 +726,4 @@ Itération 724. 	 Taille de la frontière : 1082.
 Itération 725. 	 Taille de la frontière : 1084.
 Execution 5. 	 Taille de la frontière finale : 1085.
 Nombre d'états explorés : 726.
-Temps d'exécution : 12.3357 secondes.
+Temps d'exécution : 5.4191 secondes.
