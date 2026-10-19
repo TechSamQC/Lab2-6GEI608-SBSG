@@ -1,0 +1,33 @@
+Algorithme : Hill climbing avec mouvements lateraux et redemarrages aleatoires
+Fichier : Input_6.txt
+Execution : 2
+
+Metadonnees QQWing de l'entree (distinctes des mesures de notre recherche) :
+Number of Givens: 25
+Number of Singles: 53
+Number of Hidden Singles: 3
+Number of Naked Pairs: 0
+Number of Hidden Pairs: 0
+Number of Pointing Pairs/Triples: 0
+Number of Box/Line Intersections: 0
+Number of Guesses: 0
+Number of Backtracks: 0
+Difficulty: Easy
+
+Parametres de notre recherche :
+Graine aleatoire : 2027
+Limite globale d'iterations : 100000
+Limite de redemarrages : 1000
+Limite de mouvements lateraux consecutifs : 50
+
+Une iteration examine tout le voisinage et effectue au plus un echange.
+Les iterations et le temps incluent les redemarrages de cette execution.
+Le temps exclut la lecture, l'affichage et l'ecriture des fichiers.
+
+Resultat : SOLUTION TROUVEE
+Motif d'arret : Solution trouvée
+Meilleur score de conflits : 0
+Nombre de redemarrages effectues : 99
+Nombre de voisins evalues : 1564840
+Nombre d'iterations : 10295
+Temps d'execution (secondes) : 1.970924600
