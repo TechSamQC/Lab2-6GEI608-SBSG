@@ -69,7 +69,7 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
             # Vérifier si le nombre maximum d'itérations a été atteint
             if it >= max_it:
                 output.write("Nombre maximum d'itérations atteint : " + str(max_it) + ", solution non trouvée.\n")
-                output.write("Score final : " + str(Valeur) + " Temps d'exécution :" + str(round(time.time() - starttime, 4)) + " secondes.\n")
+                output.write("Score final : " + str(Valeur) + "\nTemps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
                 print("Execution ", compteur, ": Nombre maximum d'itérations atteint, solution non trouvée.") # Message de confirmation dans la console
                 break # Sortir de la boucle si le nombre maximum d'itérations est atteint
 
