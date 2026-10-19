@@ -1,0 +1,47 @@
+Algorithme : Algorithme genetique avec elitisme et renouvellements en cas de stagnation
+Fichier : Input_7.txt
+Execution : 5
+
+Metadonnees QQWing de l'entree (distinctes des mesures de notre recherche) :
+Number of Givens: 25
+Number of Singles: 42
+Number of Hidden Singles: 14
+Number of Naked Pairs: 1
+Number of Hidden Pairs: 1
+Number of Pointing Pairs/Triples: 2
+Number of Box/Line Intersections: 0
+Number of Guesses: 0
+Number of Backtracks: 0
+Difficulty: Intermediate
+
+Parametres et fonctionnement de notre recherche :
+Graine aleatoire : 2030
+Taille de population : 300
+Limite globale de generations : 5000
+Taille du tournoi : 3
+Nombre d'elites : 5
+Probabilite de mutation par bloc et par enfant : 0.15
+Patience avant renouvellement : 50 (0 = desactive)
+Cout : somme de (9 - nombre de chiffres distincts) sur les lignes et colonnes.
+Fitness : 1 / (1 + cout), a maximiser ; une solution a une fitness de 1.
+Selection : tournoi avec remise ; le candidat de meilleure fitness gagne.
+Croisement : chaque bloc 3 x 3 vient de l'un des deux parents, avec probabilite 1/2.
+Mutation : echange de deux cases initialement vides dans un meme bloc.
+Premiere case : priorite aux conflits apres croisement ; seconde case : aleatoire et distincte.
+Une mutation est appliquee meme si elle augmente le cout.
+Les chiffres donnes restent fixes ; les blocs restent valides.
+Elitisme : les meilleures grilles passent intactes a chaque generation ordinaire.
+Stagnation : population entierement renouvelee ; meilleur resultat global conserve a part.
+Une iteration construit et evalue une nouvelle population, renouvellements compris.
+La population initiale est la generation 0 ; son evaluation est comprise dans le temps.
+Tous les individus sont evalues a chaque generation, y compris les elites.
+Le temps inclut la preparation et la recherche ; il exclut lecture, affichage et ecriture.
+
+Resultat : SOLUTION NON TROUVEE DANS LES LIMITES
+Motif d'arret : Limite de générations atteinte
+Meilleur score de conflits : 2
+Fitness de la meilleure grille : 0.333333333
+Nombre de renouvellements de population : 52
+Nombre d'evaluations d'individus : 1500300
+Nombre d'iterations : 5000
+Temps d'execution (secondes) : 30.988531300

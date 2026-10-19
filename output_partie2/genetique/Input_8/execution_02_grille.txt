@@ -1,0 +1,34 @@
+Algorithme : Algorithme genetique avec elitisme et renouvellements en cas de stagnation
+Fichier : Input_8.txt
+Difficulty: Easy
+Graine : 2027
+Resultat : SOLUTION NON TROUVEE DANS LES LIMITES
+Score de conflits : 2
+
+Matrice initiale :
+4 . . | . 9 6 | 8 . .
+. 1 5 | . . . | . 9 4
+9 . . | . 5 . | . . .
+------+-------+------
+. 8 2 | 1 . . | 6 . .
+5 7 . | . . . | . 1 .
+. 4 . | . 8 . | . 2 .
+------+-------+------
+. . . | . . 2 | . . .
+. . 1 | . . 4 | . 7 .
+. . . | . . . | 4 . .
+
+Meilleure matrice obtenue (non resolue) :
+4 2 7 | 3 9 6 | 8 5 1
+6 1 5 | 8 2 7 | 3 9 4
+9 3 8 | 4 5 1 | 7 6 2
+------+-------+------
+9 8 2 | 1 7 5 | 6 4 3
+5 7 6 | 2 4 3 | 9 1 8
+1 4 3 | 6 8 9 | 5 2 7
+------+-------+------
+7 5 4 | 9 3 2 | 1 8 6
+8 3 1 | 5 6 4 | 2 7 9
+2 6 9 | 7 1 8 | 4 3 5
+
+Cet arret ne prouve pas que le Sudoku est sans solution.

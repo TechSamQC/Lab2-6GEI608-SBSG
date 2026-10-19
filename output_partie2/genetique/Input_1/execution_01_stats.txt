@@ -44,4 +44,4 @@ Fitness de la meilleure grille : 0.333333333
 Nombre de renouvellements de population : 47
 Nombre d'evaluations d'individus : 1500300
 Nombre d'iterations : 5000
-Temps d'execution (secondes) : 16.701698000
+Temps d'execution (secondes) : 30.969035500

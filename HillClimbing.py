@@ -184,4 +184,4 @@ def HillClimbing(matriceinitiale, *, graine=2026, max_iterations=100000,  # Reç
         "temps": temps,  # Fournit la durée de recherche en secondes.
         "graine": graine,  # Fournit la graine utilisée pour pouvoir reproduire les choix aléatoires.
         "motif": motif,  # Fournit la raison exacte de l'arrêt.
-    }  # Termine le dictionnaire retourné.
+    }  

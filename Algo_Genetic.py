@@ -145,4 +145,4 @@ def AlgoGenetic(matriceinitiale, *, graine=2026, taille_population=300, max_gene
         "temps": temps,  # Fournit la durée de préparation et de recherche en secondes.
         "graine": graine,  # Fournit la graine utilisée pour cet essai.
         "motif": "Solution trouvée" if meilleur_score == 0 else "Limite de générations atteinte",  # Précise pourquoi la recherche s'est arrêtée.
-    }  # Termine le dictionnaire transmis à Partie_2.py
+    }  
