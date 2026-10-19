@@ -15,9 +15,10 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
         Ex (int): Le numéro de l'exemple pour créer le dossier de sortie.
     """
     it = 0 # Compteur pour suivre le nombre d'itérations
+    it_restart = 1 # Compteur pour suivre le nombre de tentatives de recommencement
     starttime = time.time() # Variable pour suivre le temps d'exécution
     matriceetat = np.copy(matriceinitiale)  # Copie de la matrice initiale pour manipulation
-    max_it = 300_000 # Nombre maximum d'itérations pour l'algorithme Hill Climbing
+    max_it_restart = 200_000 # Nombre maximum d'itérations pour recommencer avec la matrice initiale
 
     # Génération de toutes les paires de cases échangeables dans chaque bloc 3x3
     paires_echangeables = [] # Liste pour stocker toutes les paires de cases échangeables
@@ -66,12 +67,10 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
                 print("Execution ", compteur, ": Solution trouvée !") # Message de confirmation dans la console
                 break # Sortir de la boucle
 
-            # Vérifier si le nombre maximum d'itérations a été atteint
-            if it >= max_it:
-                output.write("Nombre maximum d'itérations atteint : " + str(max_it) + ", solution non trouvée.\n")
-                output.write("Score final : " + str(Valeur) + "\nTemps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
-                print("Execution ", compteur, ": Nombre maximum d'itérations atteint, solution non trouvée.") # Message de confirmation dans la console
-                break # Sortir de la boucle si le nombre maximum d'itérations est atteint
+            # Vérifier si le nombre maximum d'itérations de recommencement a été atteint. Autre mesure permettant d'assurer l'échappement de minima locaux/plateau
+            if it_restart >= max_it_restart:
+                matriceetat = matriceinitiale.copy() # Recommencer avec une copie de la matrice initiale
+                it_restart = 1 # Réinitialiser le compteur de tentatives de recommencement
 
             # 2. Parcourir chaque carré de 3x3 PERMUTABLES et trouver le meilleur voisin : Trouver le meilleur voisin dans la grille et permutter les valeurs
             # 2.1 Initialiser les structures de données pour le parcours des voisins
@@ -118,6 +117,7 @@ def HillClimbing(matriceinitiale, lockedindices, compteur, Ex):
 
             # 4. Prochaine itération
             it += 1 # Incrémenter le compteur d'itérations
+            it_restart += 1 # Incrémenter le compteur de tentatives de recommencement
 
 def evaluation(matrice):
     """
