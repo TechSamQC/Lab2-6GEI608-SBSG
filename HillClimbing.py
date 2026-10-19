@@ -164,3 +164,62 @@ def evaluation_delta(counts, old_value, new_value):
     added_duplicate = int(counts[new_value] > 0) # Vérifie si l'ajout de la nouvelle valeur crée un doublon
     removed_duplicate = int(counts[old_value] > 1) # Vérifie si la suppression de l'ancienne valeur réduit un doublon
     return added_duplicate - removed_duplicate # Retourne la différence de score d'évaluation résultant du remplacement
+
+def bare_HillClimbing(matriceinitiale, paires_echangeables):
+    """
+        Algorithme de Hill Climbing "Bare" (sans code additionnel, tel que le redémarrage aléatoire, l'écriture de fichiers de sortie, etc.) pour résoudre le problème du jeu "Sudoku". 
+        Arguments:
+            matriceinitiale (np.ndarray): La matrice représentant l'état initial du jeu Sudoku.
+            paires_echangeables (list): La liste des paires de cases échangeables dans la matrice initiale (les cases qui peuvent être permutées).
+    """
+    matriceetat = np.copy(matriceinitiale)  # Copie de la matrice initiale pour manipulation
+
+    # Implémentation de l'algorithme Hill Climbing
+    while True:
+        # 1. Évaluer l'état actuel
+        Valeur = evaluation(matriceetat) # Évaluer l'état actuel
+
+        # Si la valeur d'évaluation est 0, cela signifie que l'état est parfait et l'algorithme peut s'arrêter
+        if Valeur == 0:
+            return matriceetat # Retourne la matrice résolue si l'état est parfait
+
+        # 2. Parcourir chaque carré de 3x3 PERMUTABLES et trouver le meilleur voisin : Trouver le meilleur voisin dans la grille et permutter les valeurs
+        # 2.1 Initialiser les structures de données pour le parcours des voisins
+        meilleurs_echanges = [] # Liste pour stocker les meilleurs échanges trouvés
+        meilleur_voisin_val = Valeur # Initialiser la valeur du meilleur voisin vers la valeur actuelle
+        compteurs_lignes = [Counter(matriceetat[i, :]) for i in range(9)] # Compteurs pour chaque ligne
+        compteurs_colonnes = [Counter(matriceetat[:, j]) for j in range(9)] # Compteurs pour chaque colonne
+
+        # 2.2 Parcourir toutes les paires échangeables et évaluer le delta pour chaque échange
+        for case1, case2 in paires_echangeables: # Boucle pour parcourir toutes les paires échangeables
+            i, j = case1 # Coordonnées de la première case de l'échange
+            y, z = case2 # Coordonnées de la seconde case de l'échange
+            valeur1 = matriceetat[i, j] # Valeur de la première case de l'échange
+            valeur2 = matriceetat[y, z] # Valeur de la seconde case de l'échange
+            delta = 0 # Initialiser le delta pour cet échange
+            # Évaluer l'impact de l'échange sur les lignes et les colonnes
+            if i != y: # SI les lignes des deux cases sont différentes, évaluer l'impact sur les lignes
+                delta += evaluation_delta(compteurs_lignes[i], valeur1, valeur2) # Évaluer l'impact sur la ligne i
+                delta += evaluation_delta(compteurs_lignes[y], valeur2, valeur1) # Évaluer l'impact sur la ligne y
+            if j != z: # SI les colonnes des deux cases sont différentes, évaluer l'impact sur les colonnes
+                delta += evaluation_delta(compteurs_colonnes[j], valeur1, valeur2) # Évaluer l'impact sur la colonne j
+                delta += evaluation_delta(compteurs_colonnes[z], valeur2, valeur1) # Évaluer l'impact sur la colonne z
+            valeurvoisin = Valeur + delta # Calculer la valeur du voisin en ajoutant le delta à la valeur actuelle
+            if valeurvoisin < meilleur_voisin_val: # Si le voisin est meilleur que le meilleur voisin trouvé jusqu'à présent
+                meilleur_voisin_val = valeurvoisin # Mettre à jour la valeur du meilleur voisin trouvé jusqu'à présent
+                meilleurs_echanges = [(case1, case2)] # Réinitialiser la liste des meilleurs échanges avec le nouvel échange trouvé
+            elif valeurvoisin == meilleur_voisin_val and valeurvoisin < Valeur: # Si le voisin a la même valeur que le meilleur voisin trouvé jusqu'à présent et qu'il est meilleur que l'état actuel
+                meilleurs_echanges.append((case1, case2)) # Ajouter l'échange à la liste des meilleurs échanges
+
+        # 2.3 On met à jour l'état actuel avec le meilleur voisin trouvé (meilleure permutation)
+        if meilleurs_echanges: # SI un meilleur voisin a été trouvé
+            premiere_case, seconde_case = random.choice(meilleurs_echanges) # Choisir un échange aléatoire parmi les meilleurs échanges trouvés
+            i, j = premiere_case # Coordonnées de la première case de l'échange choisie aléatoirement
+            y, z = seconde_case # Coordonnées de la seconde case de l'échange choisie aléatoirement
+            matriceetat[i, j], matriceetat[y, z] = matriceetat[y, z], matriceetat[i, j] # Mettre à jour la matrice d'état avec le meilleur échange trouvé
+
+        # 3. SINON, aucun changement n'a été effectué. Lancer l'échappement d'un plateau local
+        else: # Si aucun changement n'a été effectué lors de cette itération, on tente des swaps aléatoires, cela permet d'échapper à un plateau local
+            return matriceetat # Retourne la matrice actuelle si aucun meilleur voisin n'a été trouvé (plateau local)
+
+        # 4. Prochaine itération
