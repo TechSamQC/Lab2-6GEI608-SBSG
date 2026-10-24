@@ -57,4 +57,70 @@ On observe qu'avec cet algorithme, on obtient des temps d'exécution très sembl
 ## Partie 2 - Problème d’optimisation - Sudoku
 ### Implémentation de la recherche locale (Hill climbing)
 
+Pour cette partie, nous utilisons une recherche locale pour résoudre le Sudoku. La grille est représentée par une matrice NumPy de 9 lignes et 9 colonnes. La liste lockedindices contient les coordonnées des chiffres donnés au départ, qui ne doivent jamais être modifiés.
+
+La fonction HillClimbing suppose que la grille reçue est déjà remplie et que chaque bloc 3 × 3 contient les chiffres de 1 à 9 sans répétition. Cette préparation doit donc être effectuée avant son appel. La recherche vise ensuite à éliminer les répétitions dans les lignes et les colonnes.
+
+### Explication du fonctionnement
+
+L’algorithme fait les opérations suivantes :
+
+1. Copie la matrice reçue pour obtenir la grille courante et initialise les compteurs d’itérations ainsi que le chronomètre.
+
+2. Construit la liste de toutes les paires de cases échangeables. Une paire contient deux cases non verrouillées appartenant au même bloc 3 × 3.
+
+3. Évalue la grille en comptant les répétitions dans les lignes et les colonnes. Plus le score est faible, meilleure est la grille. Un score de 0 correspond à une solution lorsque les blocs sont valides et les chiffres donnés sont conservés.
+
+4. Examine tous les échanges possibles afin de trouver celui qui réduit le plus le score. Pour éviter de recalculer entièrement le score de chaque voisin, utilise des compteurs d’occurrences et la fonction evaluation_delta, qui calcule uniquement l’effet de l’échange sur les lignes et les colonnes concernées.
+
+5. Effectue le meilleur échange trouvé. Lorsque plusieurs échanges donnent la même amélioration, en choisit un aléatoirement.
+
+6. Si aucun échange ne réduit le score, effectue 8 échanges aléatoires consécutifs entre des cases échangeables. Ces perturbations peuvent augmenter les conflits, mais elles permettent de quitter la configuration où la recherche était bloquée.
+
+7. Lorsque le compteur de reprise it_restart atteint 200 000, repart d’une copie de la matrice reçue au début de la fonction. Le nombre total d’itérations et le chronomètre continuent de s’accumuler.
+
+8. Lorsque le score atteint 0, enregistre la grille résolue, le temps d’exécution et le nombre total d’itérations, puis termine la recherche.
+
+### PARTICULARITÉS :
+
+- Les chiffres donnés sont protégés par lockedindices.
+- Les échanges se font uniquement à l’intérieur d’un même bloc. Ils préservent donc la validité des blocs lorsqu’ils sont valides au départ.
+- La phase d’amélioration accepte uniquement les voisins ayant un score strictement inférieur. Les 8 échanges aléatoires servent à sortir des situations sans amélioration immédiate.
+- La reprise utilise la même matrice de départ. Elle ne génère pas un nouveau remplissage aléatoire.
+- Le seuil de 200 000 déclenche une reprise et ne constitue pas une limite globale d’exécution. Le programme peut donc dépasser plusieurs millions d’itérations.
+- Une itération correspond à un examen du voisinage suivi d’un meilleur échange ou d’une perturbation de 8 échanges. Chaque voisin examiné n’est pas compté comme une itération distincte.
+- Les choix aléatoires peuvent produire des temps et des nombres d’itérations différents pour une même grille.
+- Les résultats sont écrits dans output-partie2/output_X/HillClimbing_N.txt, où X représente le numéro de l’exemple et N celui de l’exécution.
+
+Le fichier contient également une fonction bare_HillClimbing. Cette version effectue seulement les améliorations locales et retourne la grille lorsqu’elle atteint un score de 0 ou lorsqu’aucun meilleur voisin n’existe. Elle ne réalise ni perturbation aléatoire, ni reprise, ni écriture de résultats. La grille qu’elle retourne n’est donc pas nécessairement résolue.
+
+### Statistiques
+
+Nous avons regroupé 10 exécutions pour chacune des 10 grilles, soit 100 exécutions. Le nombre de chiffres donnés correspond aux cases déjà remplies dans le Sudoku d’origine. Les niveaux de difficulté sont ceux indiqués dans les fichiers provenant de QQWing.
+
+| Exemple | Difficulté | Chiffres donnés | Temps moyen (s) | Nombre moyen d’itérations |
+| :--- | :--- | ---: | ---: | ---: |
+| Input_1 | Intermediate | 24 | 98,62 | 371 240 |
+| Input_2 | Easy | 23 | 294,14 | 1 100 498 |
+| Input_3 | Easy | 25 | 50,72 | 179 655 |
+| Input_4 | Intermediate | 23 | 219,12 | 633 423 |
+| Input_5 | Intermediate | 26 | 38,63 | 140 944|
+| Input_6 | Easy | 25 | 14,16 | 50 603 |
+| Input_7 | Intermediate | 25 | 84,35 | 286 084|
+| Input_8 | Easy | 25 | 40,25 | 138 393 |
+| Input_9 | Simple | 28 | 6,99 | 25 940 |
+| Input_10 | Easy | 25 | 45,26 | 161 298 |
+| **Moyenne globale (100 exécutions)** | — | — | **89,56** | **313 658** |
+
+La moyenne globale est calculée en donnant le même poids à chacune des 100 exécutions.
+
+### Conclusion Sur le Hill Climbing
+
+On observe que le temps d’exécution dépend beaucoup de la grille et des choix effectués pendant la recherche. L’exemple 9 présente le temps moyen le plus faible, avec 6,99 secondes, tandis que l’exemple 2 présente le temps moyen le plus élevé, avec 294,14 secondes.
+
+Les variations sont également importantes entre les exécutions d’une même grille. Pour l’exemple 4, les temps vont de 26,22 à 1 186,51 secondes. Sa moyenne atteint 219,12 secondes, alors que sa médiane est de 109,31 secondes. Certaines exécutions longues augmentent donc fortement la moyenne. Cela montre pourquoi il est utile de répéter les essais et de considérer aussi la médiane.
+
+Le niveau de difficulté indiqué par QQWing ne suffit pas à prévoir les performances du Hill climbing. Par exemple, l’entrée 2, classée « Easy », demande en moyenne plus de temps que l’entrée 5, classée « Intermediate ». Le nombre de chiffres donnés ne suffit pas non plus : les entrées 6 et 7 possèdent chacune 25 chiffres donnés, mais leurs temps moyens sont respectivement de 14,16 et 84,35 secondes.
+
+Notre méthode peut ainsi progresser rapidement sur certaines configurations et demander beaucoup plus de travail sur d’autres. Les perturbations aléatoires et les reprises donnent de nouvelles possibilités de progression, mais cette version ne garantit pas de trouver une solution dans un temps limité.
 ### Implémentation de l'algorithme génétique
