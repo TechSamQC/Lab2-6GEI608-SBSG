@@ -1,6 +1,7 @@
 import numpy as np
 import time
 
+from HillClimbing import bare_HillClimbing
 from SudokuFilling import fill
 
 def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
@@ -14,9 +15,11 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
         Ex (int): Le numéro de l'exemple pour créer le dossier de sortie.
     """
     it = 0 # Compteur pour suivre le nombre d'itérations
+    it_restart = 1 # Compteur pour suivre le nombre de tentatives de recommencement
     starttime = time.time() # Variable pour suivre le temps d'exécution
     matriceetat = np.copy(matriceinitiale)  # Copie de la matrice initiale pour manipulation
-    max_it = 300_000 # Nombre maximum d'itérations pour l'algorithme génétique
+    max_it_restart = 150 # Nombre maximum d'itérations avant d'éradiquer la population actuelle (recommencer avec une nouvelle population)
+    population_size = 40 # Taille de la population pour l'algorithme génétique
 
     # Génération de toutes les paires de cases échangeables dans chaque bloc 3x3
     paires_echangeables = [] # Liste pour stocker toutes les paires de cases échangeables
@@ -35,7 +38,7 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
     # Initialisation de la population pour l'algorithme génétique
     population = [np.copy(matriceetat)] # Liste pour stocker les individus de la population
 
-    for _ in range(19): # Taille de la population de 20 (1 état initial + 19 nouveaux individus)
+    for _ in range(population_size - 1): # Taille de la population de 40 (1 état initial + 39 nouveaux individus)
         nouvel_individu = np.copy(matriceetat) # Créer un nouvel individu en copiant l'état initial
         fill(nouvel_individu, lockedindices, 9) # Remplir les cases vides avec des chiffres aléatoires (1 à 9 dans chaque bloc)
         population.append(nouvel_individu) # Ajouter le nouvel individu à la population
@@ -44,21 +47,36 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
     with open("output-partie2/output_" + str(Ex) + "/AlgoGenetic_" + str(compteur) + ".txt", "w", encoding="utf-8") as output:
         # Implémentation de l'algorithme génétique
         while True:
-            # Vérification de la condition d'arrêt basée sur le nombre maximum d'itérations
-            if it >= max_it:
-                output.write("Nombre maximum d'itérations atteint. Aucun solution trouvée.\n")
-                print("Execution ", compteur, ": Nombre maximum d'itérations atteint. Aucun solution trouvée.")
-                break
+            # Vérification de la condition de recommencement
+            if it_restart >= max_it_restart:
+                matriceetat = matriceinitiale.copy() # Recommencer avec une copie de la matrice initiale
+                population = [np.copy(matriceetat)] # Liste pour stocker les individus de la population
+            
+                for _ in range(population_size - 1): # Taille de la population de 40 (1 état initial + 39 nouveaux individus)
+                    nouvel_individu = np.copy(matriceetat) # Créer un nouvel individu en copiant l'état initial
+                    fill(nouvel_individu, lockedindices, 9) # Remplir les cases vides avec des chiffres aléatoires (1 à 9 dans chaque bloc)
+                    population.append(nouvel_individu) # Ajouter le nouvel individu à la population
+                it_restart = 1 # Réinitialiser le compteur de tentatives de recommencement
 
-            # 1. Évaluation de la fitness de chaque individu de la population
+            # 1. Optimisation de la population (Algorithme Hill Climbing)
+            population = [bare_HillClimbing(individu, paires_echangeables) for individu in population] # Appliquer l'algorithme Hill Climbing à chaque individu de la population
+
+            # 2. Évaluation de la fitness de chaque individu de la population
             fitness_scores = [fonction_fitness(individu) for individu in population]
 
             # Vérification de la condition d'arrêt (si un individu a une fitness parfaite)
             if 0 in fitness_scores: # Si un individu a une fitness parfaite (score de 0)
                 # Écrire la grille résolue dans le fichier de sortie
                 output.write("Grille résolue :\n")
+
                 for i in range(9):
-                    output.write(" ".join(str(population[fitness_scores.index(0)][i, j]) for j in range(9)) + "\n")
+                    # Formate chaque bloc de 3 colonnes séparé par " | "
+                    ligne = " | ".join(" ".join(str(population[fitness_scores.index(0)][i, j]) for j in range(b * 3, (b + 1) * 3)) for b in range(3))
+                    output.write(ligne + "\n")
+                    # Ajoute les lignes de séparation horizontales après les lignes 2 et 5
+                    if i == 2 or i == 5:
+                        output.write("------|-------|-------\n")
+                
                 # Écrire le temps d'exécution dans le fichier de sortie
                 output.write("Temps d'exécution : " + str(round(time.time() - starttime, 4)) + " secondes.\n")
                 # Écrire le nombre d'itérations dans le fichier de sortie
@@ -66,10 +84,10 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
                 print("Execution ", compteur, ": Solution trouvée !") # Message de confirmation dans la console
                 break # Sortir de la boucle
 
-            # 2. Tri des individus par fitness (du meilleur au pire)
+            # 3. Tri des individus par fitness (du meilleur au pire)
             population = [individu for _, individu in sorted(zip(fitness_scores, population), key=lambda x: x[0])] # Tri des individus par fitness (du meilleur au pire)
 
-            # 3. Application du crossover
+            # 4. Application du crossover
             for i in range(4, len(population), 2): # Parcours des individus par paires en commençant à l'indice 4 pour préserver les 4 meilleurs individus (élitisme)
                 if i + 1 < len(population): # S'assurer qu'il y a bien une paire d'individus pour le crossover
                     parent1 = population[i] # Sélection du premier parent pour le crossover
@@ -78,18 +96,13 @@ def AlgoGenetic(matriceinitiale, lockedindices, compteur, Ex):
                     population[i] = enfant1 # Remplacer le premier parent par le premier enfant
                     population[i + 1] = enfant2 # Remplacer le second parent par le second enfant
 
-            # 4. Application de la mutation
+            # 5. Application de la mutation
             for i in range(4, len(population)): # Parcours de chaque individu de la population en commençant à l'indice 4 pour préserver les 4 meilleurs individus (élitisme)
                 population[i] = mutation(population[i], paires_echangeables) # Appliquer la mutation à chaque individu
 
-            ###########TESTS###########
-            output.write("Itération : " + str(it) + "\n")
-            for idx, indiv in enumerate(population):
-                output.write("Individu " + str(idx) + " : " + str(fonction_fitness(indiv)) + "\n")
-            output.write("\n") # Ajouter une ligne vide pour séparer les itérations
-
-            # 5. Prochaine itération
+            # 6. Prochaine itération
             it += 1
+            it_restart += 1
 
 def fonction_fitness(matrice):
     """
