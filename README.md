@@ -164,6 +164,7 @@ Le fonctionnement de l'algorithme peut être divisé en plusieurs étapes.
 9. Redémarrage de la population : Afin de renouveler la recherche lorsque l'évolution de la population se prolonge, l'algorithme utilise un compteur de redémarrage. Lorsque ce compteur atteint le seuil de 150 (choisi par expérimentations), la population est reconstruite à partir de la grille initiale : un individu reprend la grille de départ et 39 nouveaux individus sont générés avec fill. Ce mécanisme permet de réintroduire de la diversité dans la recherche lorsque les générations successives ne suffisent pas à trouver une solution (plateau de fitness).
 
 10. Condition d'arrêt et enregistrement des résultats : L'algorithme s'arrête lorsqu'un individu atteint une fitness égale à 0. La grille résolue, le temps d'exécution et le nombre d'itérations sont alors inscrits dans un fichier de sortie associé à l'exécution et à l'exemple traité.
+*Les résultats sont écrits dans output-partie2/output_X/AlgoGenetic_N.txt, où X représente le numéro de l’exemple et N celui de l’exécution.*
 
 ### Statistiques
 Nous avons regroupé 10 exécutions pour chacune des 10 grilles, soit 100 exécutions. Le nombre de chiffres donnés correspond aux cases déjà remplies dans le Sudoku d’origine. Les niveaux de difficulté sont ceux indiqués dans les fichiers provenant de QQWing.
