@@ -3,7 +3,7 @@ import numpy as np
 
 from SudokuFilling import fill
 from HillClimbing import HillClimbing
-from Algo_Genetic_Copy import AlgoGenetic
+from Algo_Genetic import AlgoGenetic
 
 count = 1 # Variable globale pour compter les occurrences
 matricesinitiales = [] # Liste des matrices "initiales" des jeux
@@ -77,7 +77,7 @@ def main():
         count = 1 # Réinitialisation du compteur pour l'algorithme génétique
         while (count <= 10):
             print ("Algo Genetique Input #", Ex, "; Execution #", count)
-            #AlgoGenetic(matricesinitiales[Ex-1], lockedindices[Ex-1], count, Ex)
+            AlgoGenetic(matricesinitiales[Ex-1], lockedindices[Ex-1], count, Ex)
             count += 1
 
     # Retour d'un code de sortie (0 = succès)
